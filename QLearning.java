@@ -8,5 +8,7 @@ public class QLearning {
         QLearner learner = new QLearner(gridSize, initValue);
 
         learner.learn();
+
+        learner.printGridWorld();
     }
 }
