@@ -41,6 +41,7 @@ public class QLearner {
             }
             System.out.print("]");
             System.out.println();
+
         }
     }
 }
