@@ -1,7 +1,7 @@
 
 public class QLearner {
 
-    private int[][] gridWorld;
+    private QCell[][] qTable;
     private int initValue;
     private int gridSize;
 
@@ -14,13 +14,12 @@ public class QLearner {
 
     private void initializeGridWorld()
     {
-        gridWorld = new int[gridSize][gridSize];
-        int gridSize = Constants.GRID_SIZE;
+        qTable = new QCell[gridSize][gridSize];
         for (int row = 0; row < gridSize; row++)
         {
             for (int col = 0; col < gridSize; col++)
             {
-                gridWorld[row][col] = initValue;
+                qTable[row][col] = new QCell(initValue);
             }
         }
     }
@@ -34,10 +33,11 @@ public class QLearner {
     {
         for (int row = 0; row < gridSize; row++)
         {
-            System.out.print("[ ");
+            System.out.print("[");
             for (int col = 0; col < gridSize; col++)
             {
-                System.out.print(gridWorld[row][col] + " ");
+                QCell cell = qTable[row][col];
+                cell.printCellInformation();
             }
             System.out.print("]");
             System.out.println();
