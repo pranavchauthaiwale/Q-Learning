@@ -9,6 +9,6 @@ public class QLearning {
 
         learner.learn();
 
-        learner.printGridWorld();
+        //learner.printGridWorld();
     }
 }

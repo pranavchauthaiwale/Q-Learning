@@ -3,11 +3,11 @@ import java.util.List;
 import java.util.Random;
 
 public class QCell {
-    private int up;
-    private int down;
-    private int left;
-    private int right;
-    private int maximumExpected;
+    private double up;
+    private double down;
+    private double left;
+    private double right;
+    private double maximumExpected;
     private List<Action> maxRewardActions;
 
     private static List<Action> populateRewardsActionsList()
@@ -62,6 +62,41 @@ public class QCell {
         this.right = right;
     }
 
+    public double getUp() {
+        return up;
+    }
+
+    public double getDown() {
+        return down;
+    }
+
+    public double getLeft() {
+        return left;
+    }
+
+    public double getRight() {
+        return right;
+    }
+
+    public double getMaximumExpected() {
+        return maximumExpected;
+    }
+
+    public double getAttributeValue(Action action)
+    {
+        double attributeValue = 0;
+        switch (action){
+            case MOVE_LEFT: attributeValue = this.left;
+                            break;
+            case MOVE_RIGHT:attributeValue = this.right;
+                            break;
+            case MOVE_UP:   attributeValue = this.up;
+                            break;
+            case MOVE_DOWN: attributeValue = this.down;
+                            break;
+        }
+        return attributeValue;
+    }
     private void tryUpdateMaxRewardActionList()
     {
         maxRewardActions.clear();
@@ -88,7 +123,7 @@ public class QCell {
         {
             return maxRewardActions.get(0);
         }
-
+        System.out.print("List Size:" + maxRewardActions.size() + " ");
         return maxRewardActions.get(new Random().nextInt(maxRewardActions.size()));
     }
 
