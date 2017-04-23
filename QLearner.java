@@ -27,10 +27,12 @@ public class QLearner {
         initializeAgent();
         int episodes = Constants.EPISODES;
         printCurrentState();
+        System.out.println();
         int counter = 0;
-        //for (int i = 0; i < episodes; i++){
-            while (!isGoalAchieved()){
+        for (int i = 0; i < 250; i++){
+            //while (!isGoalAchieved()){
                 moveAgent();
+                printGridWorld();
                 counter++;
             }
 
@@ -178,6 +180,25 @@ public class QLearner {
 
     private void updateQValue(Action actionTaken, int reward)
     {
+        double newMaximum;
+        double previousStateAttribute;
+        double newValue;
+        QCell newState = qTable[currentStateRow][currentStateCol];
+        QCell previousState = qTable[previousStateRow][previousStateCol];
 
+        newMaximum = newState.getMaximumExpected();
+        previousStateAttribute = previousState.getAttributeValue(actionTaken);
+        newValue = previousStateAttribute + learningRate * (reward + (discountFactor * newMaximum) - previousStateAttribute);
+
+        switch (actionTaken){
+            case MOVE_LEFT: previousState.setLeft(newValue);
+                            break;
+            case MOVE_RIGHT:previousState.setRight(newValue);
+                            break;
+            case MOVE_UP:   previousState.setUp(newValue);
+                            break;
+            case MOVE_DOWN: previousState.setDown(newValue);
+                            break;
+        }
     }
 }

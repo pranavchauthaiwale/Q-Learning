@@ -20,7 +20,7 @@ public class QCell {
         return maxList;
     }
 
-    public QCell(int initValue)
+    public QCell(double initValue)
     {
         this.up = initValue;
         this.down = initValue;
@@ -30,52 +30,24 @@ public class QCell {
         this.maxRewardActions = populateRewardsActionsList();
     }
 
-    public void setUp(int up) {
-        if (up > maximumExpected) {
-            maximumExpected = up;
-            tryUpdateMaxRewardActionList();
-        }
+    public void setUp(double up) {
         this.up = up;
+        tryUpdateMaxRewardActionList();
     }
 
-    public void setDown(int down) {
-        if(down > maximumExpected) {
-            maximumExpected = down;
-            tryUpdateMaxRewardActionList();
-        }
+    public void setDown(double down) {
         this.down = down;
+        tryUpdateMaxRewardActionList();
     }
 
-    public void setLeft(int left) {
-        if (left > maximumExpected) {
-            maximumExpected = left;
-            tryUpdateMaxRewardActionList();
-        }
+    public void setLeft(double left) {
         this.left = left;
+        tryUpdateMaxRewardActionList();
     }
 
-    public void setRight(int right) {
-        if (right > maximumExpected) {
-            maximumExpected = right;
-            tryUpdateMaxRewardActionList();
-        }
+    public void setRight(double right) {
         this.right = right;
-    }
-
-    public double getUp() {
-        return up;
-    }
-
-    public double getDown() {
-        return down;
-    }
-
-    public double getLeft() {
-        return left;
-    }
-
-    public double getRight() {
-        return right;
+        tryUpdateMaxRewardActionList();
     }
 
     public double getMaximumExpected() {
@@ -99,6 +71,7 @@ public class QCell {
     }
     private void tryUpdateMaxRewardActionList()
     {
+        maximumExpected = findMaximum();
         maxRewardActions.clear();
         if (up == maximumExpected){
             maxRewardActions.add(Action.MOVE_UP);
@@ -115,20 +88,36 @@ public class QCell {
     }
 
     public Action getNextAction() throws Exception {
-        if (maxRewardActions == null)
+        if (maxRewardActions.size() == 0)
         {
             throw new Exception("Actions List Empty");
         }
         if (maxRewardActions.size() == 1)
         {
+            System.out.print("List Size:" + maxRewardActions.size() + " Max: " + maximumExpected + " ");
             return maxRewardActions.get(0);
         }
-        System.out.print("List Size:" + maxRewardActions.size() + " ");
+        System.out.print("List Size:" + maxRewardActions.size() + " Max: " + maximumExpected + " ");
         return maxRewardActions.get(new Random().nextInt(maxRewardActions.size()));
     }
 
     public void printCellInformation()
     {
         System.out.print(" {" + up + ", " + right + ", " + down + ", " + left + "} ");
+    }
+
+    public double findMaximum(){
+
+        double maximum = up;
+        if (right > maximum){
+            maximum = right;
+        }
+        if (down >  maximum){
+            maximum = down;
+        }
+        if (left > maximum) {
+            maximum = left;
+        }
+        return maximum;
     }
 }
