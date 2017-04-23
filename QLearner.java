@@ -1,3 +1,4 @@
+import java.util.Random;
 
 public class QLearner {
 
@@ -11,6 +12,8 @@ public class QLearner {
     private int reward;
     private double learningRate;
     private double discountFactor;
+    private double explorationProbability;
+    private Random randomGenerator;
 
     QLearner(int gridSize, int initValue)
     {
@@ -18,6 +21,8 @@ public class QLearner {
         this.initValue = initValue;
         this.learningRate = Constants.LEARNING_RATE;
         this.discountFactor = Constants.DISCOUNT_FACTOR;
+        this.explorationProbability = Constants.EXPLORATION_PROBABILITY;
+        randomGenerator = new Random();
         initializeGridWorld();
     }
 
@@ -29,12 +34,14 @@ public class QLearner {
         printCurrentState();
         System.out.println();
         int counter = 0;
-        for (int i = 0; i < 250; i++){
-            //while (!isGoalAchieved()){
-                moveAgent();
-                printGridWorld();
-                counter++;
+        for (int i = 0; i < 250; i++) {
+            if (isGoalAchieved()) {
+                break;
             }
+            moveAgent();
+            printGridWorld();
+            counter++;
+        }
 
         //}
         System.out.println("Total Steps taken to reach the end state: " + counter);
@@ -86,7 +93,8 @@ public class QLearner {
 
         try
         {
-            Action action = cell.getNextAction();
+            double randomness = ((double)randomGenerator.nextInt(100)) / 100;
+            Action action = cell.getNextAction(randomness >= explorationProbability);
             switch (action)
             {
                 case MOVE_UP:
@@ -172,7 +180,7 @@ public class QLearner {
         return 1;
     }
 
-    public void printCurrentState()
+    private void printCurrentState()
     {
         System.out.print(" " + currentStateRow);
         System.out.print(", " + currentStateCol);

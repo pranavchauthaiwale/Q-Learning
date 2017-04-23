@@ -9,6 +9,8 @@ public class QCell {
     private double right;
     private double maximumExpected;
     private List<Action> maxRewardActions;
+    private List<Action> randomActions;
+    private Random randomGenerator;
 
     private static List<Action> populateRewardsActionsList()
     {
@@ -28,6 +30,8 @@ public class QCell {
         this.right = initValue;
         this.maximumExpected = initValue;
         this.maxRewardActions = populateRewardsActionsList();
+        this.randomActions = populateRewardsActionsList();
+        randomGenerator = new Random();
     }
 
     public void setUp(double up) {
@@ -69,6 +73,27 @@ public class QCell {
         }
         return attributeValue;
     }
+
+    public Action getNextAction(boolean randomAction) throws Exception {
+        if (randomAction) {
+            return randomActions.get(randomGenerator.nextInt(4));
+        }
+        if (maxRewardActions.size() == 0) {
+            throw new Exception("Actions List Empty");
+        }
+        if (maxRewardActions.size() == 1) {
+            System.out.print("List Size:" + maxRewardActions.size() + " Max: " + maximumExpected + " ");
+            return maxRewardActions.get(0);
+        }
+        System.out.print("List Size:" + maxRewardActions.size() + " Max: " + maximumExpected + " ");
+        return maxRewardActions.get(new Random().nextInt(maxRewardActions.size()));
+    }
+
+    public void printCellInformation()
+    {
+        System.out.print(" {" + up + ", " + right + ", " + down + ", " + left + "} ");
+    }
+
     private void tryUpdateMaxRewardActionList()
     {
         maximumExpected = findMaximum();
@@ -87,26 +112,7 @@ public class QCell {
         }
     }
 
-    public Action getNextAction() throws Exception {
-        if (maxRewardActions.size() == 0)
-        {
-            throw new Exception("Actions List Empty");
-        }
-        if (maxRewardActions.size() == 1)
-        {
-            System.out.print("List Size:" + maxRewardActions.size() + " Max: " + maximumExpected + " ");
-            return maxRewardActions.get(0);
-        }
-        System.out.print("List Size:" + maxRewardActions.size() + " Max: " + maximumExpected + " ");
-        return maxRewardActions.get(new Random().nextInt(maxRewardActions.size()));
-    }
-
-    public void printCellInformation()
-    {
-        System.out.print(" {" + up + ", " + right + ", " + down + ", " + left + "} ");
-    }
-
-    public double findMaximum(){
+    private double findMaximum(){
 
         double maximum = up;
         if (right > maximum){
@@ -120,4 +126,5 @@ public class QCell {
         }
         return maximum;
     }
+
 }
