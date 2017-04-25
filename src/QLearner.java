@@ -1,3 +1,5 @@
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class QLearner {
@@ -5,46 +7,48 @@ public class QLearner {
     private QCell[][] qTable;
     private int initValue;
     private int gridSize;
+    private int reward;
+    private int episodes;
     private int currentStateRow;
     private int currentStateCol;
     private int previousStateRow;
     private int previousStateCol;
-    private int reward;
     private double learningRate;
     private double discountFactor;
     private double explorationProbability;
     private Random randomGenerator;
+    private GraphHelper graphHelper;
 
     QLearner(int gridSize, int initValue)
     {
         this.gridSize = gridSize;
         this.initValue = initValue;
-        this.learningRate = Constants.LEARNING_RATE;
-        this.discountFactor = Constants.DISCOUNT_FACTOR;
-        this.explorationProbability = Constants.EXPLORATION_PROBABILITY;
-        randomGenerator = new Random();
+        this.randomGenerator = new Random();
+        populateConstants();
         initializeGridWorld();
     }
 
     public void learn()
     {
+        int counter;
         System.out.println("Q-Learning");
-        initializeAgent();
-        int episodes = Constants.EPISODES;
+        Map<Integer, Integer> totalSteps = new LinkedHashMap<>();
         printCurrentState();
         System.out.println();
-        int counter = 0;
-        for (int i = 0; i < 250; i++) {
-            if (isGoalAchieved()) {
-                break;
-            }
-            moveAgent();
-            printGridWorld();
-            counter++;
-        }
 
-        //}
-        System.out.println("Total Steps taken to reach the end state: " + counter);
+        for (int i = 0; i < episodes; i++) {
+            counter = 0;
+            initializeAgent();
+            while (!isGoalAchieved()) {
+                moveAgent();
+                printGridWorld();
+                counter++;
+            }
+            System.out.println("Total Steps taken to reach the end state: " + counter);
+            totalSteps.put(i+1, counter);
+        }
+        plotStepsPerEpisodeGraph(totalSteps);
+
     }
 
     public void printGridWorld()
@@ -72,6 +76,14 @@ public class QLearner {
                 qTable[row][col] = new QCell(initValue);
             }
         }
+    }
+
+    private void populateConstants()
+    {
+        this.learningRate = Constants.LEARNING_RATE;
+        this.discountFactor = Constants.DISCOUNT_FACTOR;
+        this.explorationProbability = Constants.EXPLORATION_PROBABILITY;
+        this.episodes = Constants.EPISODES;
     }
 
     private void initializeAgent()
@@ -175,9 +187,9 @@ public class QLearner {
             return 100;
         }
         if ((previousStateRow == currentStateRow) && (previousStateCol == currentStateCol)) {
-            return -1;
+            return -2;
         }
-        return 1;
+        return 2;
     }
 
     private void printCurrentState()
@@ -208,5 +220,16 @@ public class QLearner {
             case MOVE_DOWN: previousState.setDown(newValue);
                             break;
         }
+    }
+
+    private void plotStepsPerEpisodeGraph(Map<Integer, Integer> totalSteps)
+    {
+        for (int i : totalSteps.keySet()){
+            System.out.println("Episode : " + i + " Steps : " + totalSteps.get(i));
+        }
+
+        graphHelper = new GraphHelper(totalSteps);
+        graphHelper.plotGraph();
+        graphHelper.setVisible(true);
     }
 }

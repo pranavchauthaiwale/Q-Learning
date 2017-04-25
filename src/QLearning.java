@@ -5,10 +5,9 @@ public class QLearning {
     {
         int gridSize = Constants.GRID_SIZE;
         int initValue = 0;
+
         QLearner learner = new QLearner(gridSize, initValue);
 
         learner.learn();
-
-        //learner.printGridWorld();
     }
 }
