@@ -187,9 +187,9 @@ public class QLearner {
             return 100;
         }
         if ((previousStateRow == currentStateRow) && (previousStateCol == currentStateCol)) {
-            return -2;
+            return -1;
         }
-        return 2;
+        return 1;
     }
 
     private void printCurrentState()
